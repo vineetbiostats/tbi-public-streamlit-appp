@@ -1,0 +1,102 @@
+{
+  "target_center": "aiims_delhi_prospective",
+  "outcome": "in_hospital_mortality",
+  "sample_size": 1024,
+  "deaths": 325,
+  "prevalence": 0.3173828125,
+  "continuous_defaults": {
+    "Age": 37.0,
+    "hemoglobin": 11.6,
+    "blood_glucose": 137.0,
+    "sodium": 137.0,
+    "serum_creatinine": 0.7
+  },
+  "categorical_options": {
+    "gender": [
+      "0",
+      "1"
+    ],
+    "motor_score": [
+      "1.0",
+      "2.0",
+      "3.0",
+      "4.0",
+      "5.0",
+      "6.0"
+    ],
+    "pupil_reactivity": [
+      "1.0",
+      "2.0",
+      "3.0"
+    ],
+    "limb_movement": [
+      "1.0",
+      "2.0",
+      "3.0"
+    ],
+    "extracranial_injury": [
+      "0.0",
+      "1.0"
+    ],
+    "hypoxia": [
+      "0.0",
+      "1.0"
+    ],
+    "hypotension": [
+      "0.0",
+      "1.0"
+    ],
+    "midline_shift": [
+      "0.0",
+      "1.0"
+    ],
+    "skull_fracture": [
+      "0.0",
+      "1.0"
+    ],
+    "mass_effect": [
+      "0.0",
+      "1.0"
+    ],
+    "contusion": [
+      "0.0",
+      "1.0"
+    ],
+    "subdural_hematoma": [
+      "0.0",
+      "1.0"
+    ],
+    "epidural_hematoma": [
+      "0.0",
+      "1.0"
+    ],
+    "dot_hemorrhages": [
+      "0.0",
+      "1.0"
+    ],
+    "basal_cisterns_effaced": [
+      "0.0",
+      "1.0"
+    ],
+    "traumatic_sah": [
+      "0.0",
+      "1.0"
+    ],
+    "intraventricular_hemorrhage": [
+      "0.0",
+      "1.0"
+    ],
+    "non_evacuated_hematoma": [
+      "0.0",
+      "1.0"
+    ],
+    "evacuated_hematoma": [
+      "0.0",
+      "1.0"
+    ],
+    "decompressive_craniectomy": [
+      "0.0",
+      "1.0"
+    ]
+  }
+}
