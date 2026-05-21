@@ -20,7 +20,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 
 st.set_page_config(
-    page_title="30-Day Mortality Risk Calculator",
+    page_title="TBI Risk Calculator",
     layout="wide",
 )
 
@@ -121,6 +121,24 @@ GENDER_LABELS = {
     "1": "Male",
     "0.0": "Female",
     "1.0": "Male",
+}
+
+PUPIL_REACTIVITY_LABELS = {
+    "1": "Both reactive",
+    "2": "One reactive",
+    "3": "None reactive",
+    "1.0": "Both reactive",
+    "2.0": "One reactive",
+    "3.0": "None reactive",
+}
+
+LIMB_MOVEMENT_LABELS = {
+    "1": "Moves all limbs",
+    "2": "Reduced limb movement",
+    "3": "No limb movement",
+    "1.0": "Moves all limbs",
+    "2.0": "Reduced limb movement",
+    "3.0": "No limb movement",
 }
 
 YES_NO_COLUMNS = {
@@ -338,6 +356,12 @@ def format_categorical_label(column_name, raw_value):
     if column_name == "gender":
         return GENDER_LABELS.get(raw_text, raw_text)
 
+    if column_name == "pupil_reactivity":
+        return PUPIL_REACTIVITY_LABELS.get(raw_text, raw_text)
+
+    if column_name == "limb_movement":
+        return LIMB_MOVEMENT_LABELS.get(raw_text, raw_text)
+
     if column_name in YES_NO_COLUMNS:
         if raw_text in {"0", "0.0"}:
             return "No"
@@ -485,8 +509,7 @@ def render_hero():
     st.markdown(
         """
         <div class="hero-card">
-            <div class="hero-eyebrow">AIIMS Delhi Prospective Cohort</div>
-            <div class="hero-title">30-Day Mortality LASSO Calculator</div>
+            <div class="hero-title">TBI Risk Calculator</div>
             <p class="hero-copy">
                 Estimate patient-level mortality probability from the fitted LASSO logistic regression model.
                 The calculator uses the saved pipeline, so preprocessing and coefficients stay aligned.
@@ -565,18 +588,9 @@ def main():
         st.error(f"App setup failed: {type(exc).__name__}: {exc}")
         st.stop()
 
-    st.sidebar.header("Model Summary")
-    st.sidebar.write(f"Center: `{ui_metadata['target_center']}`")
-    st.sidebar.write(f"Outcome: `{ui_metadata['outcome']}`")
-    st.sidebar.write(f"Model status: `{model_status}`")
-    st.sidebar.write(f"Patients: `{ui_metadata['sample_size']}`")
-    st.sidebar.write(f"Deaths: `{ui_metadata['deaths']}`")
-    st.sidebar.write(f"Prevalence: `{ui_metadata['prevalence']:.1%}`")
-    st.sidebar.write(f"Model file locations: `{MODEL_PATH.name}` or `{ROOT_MODEL_PATH.name}`")
-    st.sidebar.write(f"Metadata file locations: `{METADATA_PATH.name}` or `{ROOT_METADATA_PATH.name}`")
-
     st.info(
-        "Binary fields are shown as Yes/No, and gender is displayed as Female/Male for easier entry. "
+        "Binary fields are shown as Yes/No, gender is displayed as Female/Male, "
+        "and the neurologic exam fields use descriptive labels for easier entry. "
         "For batch CSV prediction, the uploaded file must still contain the original predictor columns."
     )
     st.caption("Gender is currently displayed as Female = 0 and Male = 1 based on the stored source coding.")
