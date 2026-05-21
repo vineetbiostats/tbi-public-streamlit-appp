@@ -74,6 +74,8 @@ CATEGORICAL_COLUMNS = [
 OUTPUT_DIR = APP_DIR / "tbi_30d_streamlit_artifacts"
 MODEL_PATH = OUTPUT_DIR / "lasso_30d_risk_calculator.joblib"
 METADATA_PATH = OUTPUT_DIR / "ui_metadata.json"
+ROOT_MODEL_PATH = APP_DIR / "lasso_30d_risk_calculator.joblib"
+ROOT_METADATA_PATH = APP_DIR / "ui_metadata.json"
 
 INPUT_GROUPS = [
     ("Demographics and Primary Injury", ["Age", "gender", "extracranial_injury"]),
@@ -252,12 +254,13 @@ def coerce_binary_outcome(series, series_name):
 
 @st.cache_data(show_spinner=False)
 def load_ui_metadata():
-    if not METADATA_PATH.exists():
+    metadata_path = METADATA_PATH if METADATA_PATH.exists() else ROOT_METADATA_PATH
+    if not metadata_path.exists():
         raise ValueError(
-            f"Metadata file not found: {METADATA_PATH}. "
+            f"Metadata file not found at {METADATA_PATH} or {ROOT_METADATA_PATH}. "
             "Create or copy the packaged app artifacts before deployment."
         )
-    return json.loads(METADATA_PATH.read_text(encoding="utf-8"))
+    return json.loads(metadata_path.read_text(encoding="utf-8"))
 
 
 @st.cache_data(show_spinner=False)
@@ -285,12 +288,14 @@ def load_training_dataframe():
 
 @st.cache_resource(show_spinner="Loading or training the LASSO model...")
 def load_or_train_model():
-    if MODEL_PATH.exists():
-        return joblib.load(MODEL_PATH), "loaded from disk"
+    model_path = MODEL_PATH if MODEL_PATH.exists() else ROOT_MODEL_PATH
+    if model_path.exists():
+        return joblib.load(model_path), f"loaded from disk: {model_path.name}"
 
     if not DATA_PATH.exists():
         raise ValueError(
-            f"Model file is missing at {MODEL_PATH} and local training data was not found at {DATA_PATH}."
+            f"Model file is missing at {MODEL_PATH} and {ROOT_MODEL_PATH}, "
+            f"and local training data was not found at {DATA_PATH}."
         )
 
     training_df = load_training_dataframe()
@@ -567,8 +572,8 @@ def main():
     st.sidebar.write(f"Patients: `{ui_metadata['sample_size']}`")
     st.sidebar.write(f"Deaths: `{ui_metadata['deaths']}`")
     st.sidebar.write(f"Prevalence: `{ui_metadata['prevalence']:.1%}`")
-    st.sidebar.write(f"Model file: `{MODEL_PATH}`")
-    st.sidebar.write(f"Metadata file: `{METADATA_PATH}`")
+    st.sidebar.write(f"Model file locations: `{MODEL_PATH.name}` or `{ROOT_MODEL_PATH.name}`")
+    st.sidebar.write(f"Metadata file locations: `{METADATA_PATH.name}` or `{ROOT_METADATA_PATH.name}`")
 
     st.info(
         "Binary fields are shown as Yes/No, and gender is displayed as Female/Male for easier entry. "
